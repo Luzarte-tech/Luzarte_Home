@@ -1,5 +1,6 @@
 package models
 
+
 import (
 	"time"
 
@@ -7,11 +8,20 @@ import (
 )
 
 type User struct {
-	ID           uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Name         string
-	Email        string
-	Phone        string
-	PasswordHash string
-	Role         string
-	CreatedAt    time.Time
+	ID uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
+
+	Name string `gorm:"not null"`
+
+	Email string `gorm:"unique;not null"`
+
+	Phone string
+
+	PasswordHash string `gorm:"not null"`
+
+	Role string `gorm:"default:client"`
+
+	Status string `gorm:"default:active"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }

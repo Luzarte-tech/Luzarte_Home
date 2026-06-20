@@ -8,6 +8,8 @@ import (
 	"imobiliaria-api/internal/models"
 	"golang.org/x/crypto/bcrypt"
 	"github.com/gin-gonic/gin"
+	"imobiliaria-api/internal/services"
+        "imobiliaria-api/internal/dto"
 
 )
 
@@ -40,7 +42,7 @@ user := models.User{
 	Email:        req.Email,
 	Phone:        req.Phone,
 	PasswordHash: string(hash),
-	Role:         req.Role,
+	Role:         "client",
 }
 
 	if err := database.DB.Create(&user).Error; err != nil {
@@ -51,4 +53,48 @@ user := models.User{
 	}
 
 	c.JSON(http.StatusCreated, user)
+}
+func Login(c *gin.Context) {
+
+	var req dto.LoginRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+
+		return
+	}
+
+	service := services.AuthService{}
+
+	accessToken, refreshToken, err := service.Login(
+	req.Email,
+	req.Password,
+)
+
+	if err != nil {
+
+		c.JSON(401, gin.H{
+			"error": err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"access_token": token,
+		"refresh_token": refreshToken,
+	})
+}
+func Me(c *gin.Context) {
+
+	userID, _ := c.Get("user_id")
+	role, _ := c.Get("role")
+
+	c.JSON(200, gin.H{
+		"user_id": userID,
+		"role": role,
+	})
 }

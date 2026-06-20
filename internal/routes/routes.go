@@ -2,6 +2,7 @@ package routes
 
 import (
 	"imobiliaria-api/internal/handlers"
+	"imobiliaria-api/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,13 @@ func Setup(r *gin.Engine) {
 	auth := api.Group("/auth")
 	{
 		auth.POST("/register", handlers.Register)
+		auth.POST("/login", handlers.Login)
+
+		auth.GET(
+			"/me",
+			middleware.AuthMiddleware(),
+			handlers.Me,
+		)
 	}
 
 	r.GET("/", func(c *gin.Context) {
