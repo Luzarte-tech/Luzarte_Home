@@ -24,4 +24,5 @@ type User struct {
 
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	RoleID uuid.UUID `gorm:"type:uuid"`
 }

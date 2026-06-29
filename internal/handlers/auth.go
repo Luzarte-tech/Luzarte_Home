@@ -59,32 +59,28 @@ func Login(c *gin.Context) {
 	var req dto.LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-
 		c.JSON(400, gin.H{
 			"error": err.Error(),
 		})
-
 		return
 	}
 
 	service := services.AuthService{}
 
 	accessToken, refreshToken, err := service.Login(
-	req.Email,
-	req.Password,
-)
+		req.Email,
+		req.Password,
+	)
 
 	if err != nil {
-
 		c.JSON(401, gin.H{
 			"error": err.Error(),
 		})
-
 		return
 	}
 
 	c.JSON(200, gin.H{
-		"access_token": token,
+		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	})
 }
@@ -95,6 +91,6 @@ func Me(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"user_id": userID,
-		"role": role,
+		"role":    role,
 	})
 }

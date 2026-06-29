@@ -3,6 +3,8 @@ package database
 import (
 	"log"
 
+	"imobiliaria-api/internal/models"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,6 +21,17 @@ func Connect() {
 	}
 
 	DB = db
+	err = DB.AutoMigrate(
+	&models.User{},
+	&models.RefreshToken{},
+	&models.Category{},
+	&models.Property{},
+	&models.Image{},
+)
+
+if err != nil {
+	log.Fatal(err)
+}
 
 	log.Println("Banco conectado com sucesso")
 }
